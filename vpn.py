@@ -1,13 +1,11 @@
-from itertools import cycle
-from urllib.request import urlopen
-from urllib.error import URLError
 from sys import stdout
-from os import listdir, system
-from random import choice as ch
-from subprocess import getoutput as output
-from subprocess import run
-from subprocess import DEVNULL, CalledProcessError
+from os import listdir
+from itertools import cycle
 from termcolor import colored
+from random import choice as ch
+from urllib.error import URLError
+from urllib.request import urlopen
+from subprocess import run, CalledProcessError, DEVNULL
 
 
 def check_internet():
@@ -36,7 +34,8 @@ def get_input():
 
 
 def disconnect(interface):
-    output(f"wg-quick down /etc/wireguard/servers/{interface}.conf")
+    # ADD ERROR HANDELING LATER
+    run(["wg-quick", "down", f"/etc/wireguard/servers/{interface}.conf"], check=True, stdout=DEVNULL)
     print(colored(f"✅ DISCONNECTED {interface} SUCCESSFULLY ✅", "green"))
     return 0
 
@@ -86,7 +85,7 @@ def connect():
             disconnect(interface)
             return 0
         else:
-            system("clear")
+            run(["clear"])
             print(colored(f"ERROR : ALREADY DISCONNECTED", "red"))
             return 0
     elif choice == servers_count + 2:
@@ -96,11 +95,12 @@ def connect():
         if connected:
             disconnect(interface)
         temp = ch(servers)
-        output(f"wg-quick up /etc/wireguard/servers/{temp}")
+        #add error handeling later
+        run(["wg-quick", "up", f"/etc/wireguard/servers/{temp}"], check=True, stdout=DEVNULL, stderr=DEVNULL)
         interface = temp.split(".")[0]
         check_internet()
         print(colored(f"✅ CONNECTED TO {interface} SUCCESSFULLY ✅", "green"))
-        new_ip = output("dig +short myip.opendns.com @resolver1.opendns.com")
+        new_ip = run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=DEVNULL, stderr=DEVNULL)
         print(f"old ip: {old_ip}")
         print(f"new ip: {new_ip}")
     elif 0 < choice <= servers_count:
@@ -108,15 +108,16 @@ def connect():
             disconnect(interface)
         choice = int(choice)
         temp = servers[choice - 1]
-        output(f"wg-quick up /etc/wireguard/servers/{temp}")
+        #add error handeling later
+        run(["wg-quick", "up", f"/etc/wireguard/servers/{temp}"], check=True, stdout=DEVNULL, stderr=DEVNULL)
         interface = temp.split(".")[0]
         check_internet()
         print(colored(f"✅ CONNECTED TO {interface} SUCCESSFULLY ✅", "green"))
-        new_ip = output("dig +short myip.opendns.com @resolver1.opendns.com")
+        new_ip = run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=DEVNULL, stderr=DEVNULL)
         print(f"old ip: {old_ip}")
         print(f"new ip: {new_ip}")
     else:
-        system("clear")
+        run("clear")
         print("<--- invalid Input, Retry! --->\n")
         connect()
     return 0
