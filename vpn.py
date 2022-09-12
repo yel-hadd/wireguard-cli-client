@@ -1,3 +1,7 @@
+from itertools import cycle
+from urllib.request import urlopen
+from urllib.error import URLError
+from sys import stdout
 from os import listdir, system
 from random import choice as ch
 from subprocess import getoutput as output
@@ -6,6 +10,19 @@ from termcolor import colored
 
 # add separate get choice function to avoid potential referencing before assignment
 # add function to check if connected to internet and time elapsed before connecting
+
+def check_internet():
+    emolst = ["🌎", "🌍", "🌏"]
+    emo = cycle(emolst)
+    while True:
+        stdout.write(f"\rConnecting {next(emo)}...")
+        try:
+            response = urlopen('https://duckduckgo.com/', timeout=10)
+            print("\n")
+            return 0
+        except URLError:
+            stdout.flush()
+            pass
 
 
 def get_input():
