@@ -8,9 +8,6 @@ from subprocess import getoutput as output
 from termcolor import colored
 
 
-# add separate get choice function to avoid potential referencing before assignment
-# add function to check if connected to internet and time elapsed before connecting
-
 def check_internet():
     emolst = ["🌎", "🌍", "🌏"]
     emo = cycle(emolst)
