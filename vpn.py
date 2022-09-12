@@ -42,14 +42,17 @@ def disconnect(interface):
 
 
 def connect():
-    old_ip = output("dig +short myip.opendns.com @resolver1.opendns.com")
     try:
-        interface = run(['sudo', 'wg', 'show', 'interfaces'], shell=True,
-        check=True, stdout=DEVNULL, stderr=DEVNULL)
+        old_ip = run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=DEVNULL, stderr=DEVNULL)
     except CalledProcessError:
-        print(colored("\n⛔ PermissionError: Please Run the Program with Root Priviliges ⛔\n"))
+        print(colored("\n⛔ Connection Error: Please Verify Your Internet Connection ⛔\n"))
         return
-    interface = interface.split(" ")
+    try:
+        interface = run(['sudo', 'wg', 'show', 'interfaces'], check=True, stdout=DEVNULL, stderr=DEVNULL)
+        interface = interface.split(" ")
+    except CalledProcessError:
+        print(colored("\n⛔ Permission Error: Please Run the Program with Root Priviliges ⛔\n"))
+        return
     if len(interface) == 1:
         interface = interface[0]
         print(colored("STATUS : DISCONNECTED", "red"))
