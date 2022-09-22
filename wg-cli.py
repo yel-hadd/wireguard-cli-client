@@ -1,13 +1,13 @@
-from sys import stdout
-from os import listdir
-from itertools import cycle
-from time import sleep
-from termcolor import colored
-from random import choice as ch
-from urllib.error import URLError
-from urllib.request import urlopen
 from subprocess import run, CalledProcessError, DEVNULL, PIPE
 from multiprocessing import Process
+from urllib.request import urlopen
+from urllib.error import URLError
+from random import choice as ch
+from termcolor import colored
+from itertools import cycle
+from sys import stdout
+from os import listdir
+from time import sleep
 
 
 def connect_animation():
