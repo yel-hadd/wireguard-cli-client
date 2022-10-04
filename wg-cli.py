@@ -20,9 +20,9 @@ def connect_animation():
 
 
 def check_internet():
-    while True: 
+    while True:
         try:
-            urlopen('https://duckduckgo.com/', timeout=10)
+            urlopen("https://duckduckgo.com/", timeout=10)
             print("\n")
             return 0
         except URLError:
@@ -42,7 +42,12 @@ def get_input():
 
 def disconnect(interface):
     # ADD ERROR HANDLING LATER
-    run(["wg-quick", "down", f"/etc/wireguard/{interface}.conf"], check=True, stdout=DEVNULL, stderr=DEVNULL)
+    run(
+        ["wg-quick", "down", f"/etc/wireguard/{interface}.conf"],
+        check=True,
+        stdout=DEVNULL,
+        stderr=DEVNULL,
+    )
     print(colored(f"✅ DISCONNECTED {interface} SUCCESSFULLY ✅", "green"))
     return 0
 
@@ -50,18 +55,34 @@ def disconnect(interface):
 def connect():
     thread = Process(target=connect_animation)
     try:
-        run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=PIPE, stderr=DEVNULL)
+        run(
+            ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"],
+            check=True,
+            stdout=PIPE,
+            stderr=DEVNULL,
+        )
     except CalledProcessError:
-        print(colored("\n⛔ Connection Error: Please Verify Your Internet Connection ⛔\n"))
+        print(
+            colored("\n⛔ Connection Error: Please Verify Your Internet Connection ⛔\n")
+        )
         return
     try:
-        interface = run(['sudo', 'wg', 'show', 'interfaces'], check=True, stdout=PIPE, stderr=DEVNULL)
+        interface = run(
+            ["sudo", "wg", "show", "interfaces"],
+            check=True,
+            stdout=PIPE,
+            stderr=DEVNULL,
+        )
         interface = interface.stdout.decode("utf-8").replace("\n", "")
         interface = interface.split(" ")
     except CalledProcessError:
-        print(colored("\n⛔ Permission Error: Please Run the Program with Root Privilege ⛔\n"))
+        print(
+            colored(
+                "\n⛔ Permission Error: Please Run the Program with Root Privilege ⛔\n"
+            )
+        )
         return
-    if interface[0] == '':
+    if interface[0] == "":
         interface = None
         print(colored("STATUS : DISCONNECTED", "red"))
         connected = False
@@ -75,7 +96,11 @@ def connect():
             if file.endswith(".conf") and not file.endswith("wg0.conf"):
                 servers.append(file)
     except PermissionError:
-        print(colored("\n⛔ PermissionError: Please Run the Program with Root Privilege ⛔\n"))
+        print(
+            colored(
+                "\n⛔ PermissionError: Please Run the Program with Root Privilege ⛔\n"
+            )
+        )
         return
     servers_count = len(servers)
     if servers_count == 0:
@@ -109,14 +134,23 @@ def connect():
                 disconnect(interface)
         temp = ch(servers)
         # add error handeling later
-        run(["wg-quick", "up", f"/etc/wireguard/{temp}"], check=True, stdout=DEVNULL, stderr=DEVNULL)
+        run(
+            ["wg-quick", "up", f"/etc/wireguard/{temp}"],
+            check=True,
+            stdout=DEVNULL,
+            stderr=DEVNULL,
+        )
         interface = temp.split(".")[0]
         thread.start()
         check_internet()
         thread.terminate()
         print(colored(f"✅ CONNECTED TO {interface} SUCCESSFULLY ✅", "green"))
-        new_ip = run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=PIPE,
-                     stderr=DEVNULL)
+        new_ip = run(
+            ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"],
+            check=True,
+            stdout=PIPE,
+            stderr=DEVNULL,
+        )
         new_ip = new_ip.stdout.decode("utf-8").replace("\n", "")
         print(f"new ip: {new_ip}")
     elif 0 < choice <= servers_count:
@@ -126,14 +160,23 @@ def connect():
         choice = int(choice)
         temp = servers[choice - 1]
         # add error handling later
-        run(["wg-quick", "up", f"/etc/wireguard/{temp}"], check=True, stdout=DEVNULL, stderr=DEVNULL)
+        run(
+            ["wg-quick", "up", f"/etc/wireguard/{temp}"],
+            check=True,
+            stdout=DEVNULL,
+            stderr=DEVNULL,
+        )
         interface = temp.split(".")[0]
         thread.start()
         check_internet()
         thread.terminate()
         print(colored(f"✅ CONNECTED TO {interface} SUCCESSFULLY ✅", "green"))
-        new_ip = run(['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com'], check=True, stdout=PIPE,
-                     stderr=DEVNULL)
+        new_ip = run(
+            ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"],
+            check=True,
+            stdout=PIPE,
+            stderr=DEVNULL,
+        )
         new_ip = new_ip.stdout.decode("utf-8").replace("\n", "")
         print(f"new ip: {new_ip}")
     else:
