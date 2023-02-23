@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    wg-cli.py                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: yel-hadd <yel-hadd@mail.com>               +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/02/23 18:42:57 by yel-hadd          #+#    #+#              #
+#    Updated: 2023/02/23 18:43:16 by yel-hadd         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 from subprocess import run, CalledProcessError, DEVNULL, PIPE
 from multiprocessing import Process
 from urllib.request import urlopen
